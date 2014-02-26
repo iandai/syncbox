@@ -1,0 +1,4 @@
+s3:
+  access_key_id: "XXXXXXXXXXXXXXXXXXXX"
+  secret_access_key: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  bucket_name: "xxx"

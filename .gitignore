@@ -1,0 +1,22 @@
+pkg/*
+doc/*
+*.gem
+*.rbc
+.*.swp
+*.bak
+bundle
+.bundle
+.yardoc
+.rbx
+.rvmrc
+.vagrant
+Gemfile.lock
+spec/.fixtures
+coverage
+.ruby-version
+example*
+log/*
+
+## MAC OS
+.DS_Store
+
