@@ -1,7 +1,7 @@
+source 'https://rubygems.org'
+
 gem 'listen'
 gem 'aws-sdk'
-gem 'yaml'
-
 
 group :development do
   gem 'rspec'
