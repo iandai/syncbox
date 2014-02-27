@@ -20,15 +20,22 @@ module Syncbox
       arguement_check(options)
       s3 = AWS::S3.new(:access_key_id => options["access_key_id"], :secret_access_key => options["secret_access_key"])
       bucket_name = options["bucket_name"]
-      @bucket = s3.buckets[bucket_name]
-      remote_accessible_check
+      @bucket = s3.buckets[bucket_name]      
+    end
+
+    # Check bucket existance
+    #
+    # @return a boolean value
+    #
+    def exists?
+      @bucket.exists?
     end
     
-    # Uploads file to bucket.
+    # Uploads file to bucket
     #
     # @param [String] file_path 
     #
-    # @return a public (not authenticated) URL for the object
+    # @return a public (not authenticated) URI::HTTPS URL for the object
     #
     def upload(file_path)
       file_name = File.basename(file_path)
@@ -37,7 +44,7 @@ module Syncbox
       object.public_url
     end
 
-    # delete file from bucket.
+    # delete file from bucket
     #
     # @param [String] file_path 
     #
@@ -49,28 +56,19 @@ module Syncbox
       object.delete
     end
   
-  
   private
     # check s3 arguments contains access_key_id, secret_access_key and bucket_name
     #
     def arguement_check(options)
-      begin
-        options.fetch("access_key_id") && options.fetch("secret_access_key") && options.fetch("bucket_name")
-      rescue KeyError
-        raise ArgumentError, "The access_key_id, secret_access_key and bucket_name options are required."
+      args = ["access_key_id", "secret_access_key", "bucket_name"]  
+      args.each do |arg|
+        begin
+          options.fetch(arg)
+        rescue KeyError
+          raise ArgumentError, "Argument #{arg} is required."
+        end
       end
     end
-
-    # check S3 access_key_id, secret_access_key is valid and bucket_name exists.
-    #
-    def remote_accessible_check
-      begin
-        raise ArgumentError, "Bucket doesn't exsit."  unless @bucket.exists?
-      rescue AWS::S3::Errors::InvalidAccessKeyId
-        raise ArgumentError, 'AWS Access Key Id does not exist in our records.'
-      rescue AWS::S3::Errors::SignatureDoesNotMatch
-        raise ArgumentError, 'The request signature we calculated does not match the signature you provided. Check your key and signing method.'
-      end
-    end
+    
   end
 end
