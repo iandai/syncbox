@@ -48,3 +48,15 @@ module Syncbox
 end
 
 
+if ARGV.first == "start"
+  Syncbox::Syncbox.start
+elsif ARGV.first == "stop"
+  Syncbox::Syncbox.stop
+elsif ARGV.first == "status"
+  Syncbox::Syncbox.status
+elsif ARGV.first == "restart"
+  Syncbox::Syncbox.restart
+else
+  puts "Command '#{ARGV.first}' is not found."
+  exit!
+end
