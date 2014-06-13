@@ -1,62 +1,28 @@
-require 'optparse'
-require 'yaml'
 require_relative 'syncbox/store.rb'
 require_relative 'syncbox/syncer.rb'
 
 module Syncbox
   class Syncbox
 
-    def self.start      
-      syncbox = Syncbox.new
+    def self.start(store, store_config, local_directory)
+      syncbox = Syncbox.new(store, store_config, local_directory)
       syncbox.start
     end
     
-    # read config path from command line, and load configs
     # init a store instance
     #
-    def initialize      
-      config_file = option_parser[:config]
-      @local_directory = read_config(config_file, "local_directory")
-      config_s3 = read_config(config_file, "s3")
-      @store = Store.new("S3", config_s3)
+    def initialize(store, store_config, local_directory)
+      @local_directory = local_directory
+      @store = Store.new(store, store_config)
     end
 
-    # Init a Syncer object, and start sync
+    # Init a Syncer object, and start syncing
     #
     def start
       syncer = Syncer.new(@local_directory, @store)
       syncer.sync
     end
     
-  private
-    def read_config(config_file, store)
-      config = YAML.load_file(config_file)
-      config[store]      
-    end
-    
-    def option_parser   
-      options = {}
-      option_parser = OptionParser.new do |opts|
-        opts.banner = 'This is help messages.'
-        opts.on('-c file', '--config file', 'Pass-in config file path') do |value|
-          options[:config] = value
-        end
-      end.parse!
-      options
-    end
   end
 end
 
-
-if ARGV.first == "start"
-  Syncbox::Syncbox.start
-elsif ARGV.first == "stop"
-  Syncbox::Syncbox.stop
-elsif ARGV.first == "status"
-  Syncbox::Syncbox.status
-elsif ARGV.first == "restart"
-  Syncbox::Syncbox.restart
-else
-  puts "Command '#{ARGV.first}' is not found."
-  exit!
-end

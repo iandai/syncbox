@@ -1,15 +1,19 @@
 #!/usr/bin/env ruby
+require "#{__dir__}/../lib/synctool.rb"
+require "#{__dir__}/../lib/cli.rb"
+require 'yaml'
 
-require "#{File.dirname(__FILE__)}/../lib/syncbox.rb"
+options = Syncbox::Options.parse_options
 
-if ARGV.first == "start"
-  Syncbox::Syncbox.start
-elsif ARGV.first == "stop"
-  Syncbox::Syncbox.stop
-elsif ARGV.first == "status"
-  Syncbox::Syncbox.status
-elsif ARGV.first == "restart"
-  Syncbox::Syncbox.restart
+config_file = options[:config]
+config = YAML.load_file(config_file)
+tool = Syncbox::Synctool.new(config["store"], config["store_config"], config["local_directory"])
+
+
+if ARGV.first == "sync"
+  tool.sync
+elsif ARGV.first == "diff"
+  puts tool.diff
 else
   puts "Command '#{ARGV.first}' is not found."
   exit!

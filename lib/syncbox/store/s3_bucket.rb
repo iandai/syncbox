@@ -56,6 +56,31 @@ module Syncbox
       object.delete
     end
   
+    # get file's etag
+    #
+    # @param [String] file_path
+    #
+    # @return etag
+    #
+    def etag(file_path)
+      file_name = File.basename(file_path)
+      object = @bucket.objects[file_name]
+      object.etag.gsub('"', '')
+    end
+    
+    # get bucket all file names
+    #
+    # @return file name array
+    #
+    def file_names
+      file_names = []
+      @bucket.objects.each do |obj|
+        file_names << obj.key
+      end
+      file_names
+    end
+    
+    
   private
     # check s3 arguments contains access_key_id, secret_access_key and bucket_name
     #

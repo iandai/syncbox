@@ -38,5 +38,26 @@ module Syncbox
 
     alias modify add
   
+  
+    # get etag of file from store.
+    #
+    # @param [String] file_path 
+    #
+    # @return etag string
+    #
+    def etag(file_path)
+      @store.etag(file_path)
+    end
+    
+    
+    # get all file names from store.
+    #
+    # @return file name array
+    #
+    def file_names
+      @store.file_names
+    end
+    
+      
   end
 end
